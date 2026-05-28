@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gambling Intelligence — Panel Ejecutivo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #d4af37;
+    --dark: #1a1a2e;
+    --dark2: #16213e;
+    --bg: #f8f7f4;
+    --card: #ffffff;
+    --text: #1a1a2e;
+    --text2: #5a5a72;
+    --text3: #9a9ab0;
+    --border: rgba(26,26,46,0.1);
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  .topbar { background: var(--dark); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon { width: 36px; height: 36px; background: var(--gold); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .logo-name { color: white; font-size: 16px; font-weight: 500; }
+  .logo-sub { color: rgba(255,255,255,0.4); font-size: 12px; }
+  .n8n-badge { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); font-size: 12px; padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; gap: 6px; }
+  .dot-green { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; }
+  .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+  .date-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+  .date-txt { font-size: 13px; color: var(--text3); }
+  .refresh-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--dark); color: var(--gold); border: none; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: opacity 0.2s; }
+  .refresh-btn:hover { opacity: 0.85; }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 2rem; }
+  .stat { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 1rem 1.25rem; }
+  .stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .stat-value { font-size: 28px; font-weight: 500; color: var(--text); }
+  .news-list { display: flex; flex-direction: column; gap: 1.25rem; }
+  .card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; transition: border-color 0.2s; }
+  .card:hover { border-color: rgba(212,175,55,0.4); }
+  .card-img { width: 100%; height: 140px; background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 100%); display: flex; align-items: center; justify-content: center; position: relative; }
+  .card-img-inner { text-align: center; }
+  .card-img-icon { font-size: 28px; color: var(--gold); margin-bottom: 6px; }
+  .card-img-title { font-size: 13px; color: var(--gold); font-weight: 500; padding: 0 2rem; line-height: 1.4; }
+  .card-img-brand { font-size: 10px; color: rgba(212,175,55,0.4); margin-top: 4px; }
+  .card-body { padding: 1.25rem; }
+  .card-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 0.75rem; flex-wrap: wrap; }
+  .cat-tag { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .cat-regulacion { background: #E6F1FB; color: #0C447C; }
+  .cat-mercado { background: #EAF3DE; color: #3B6D11; }
+  .cat-tecnologia { background: #EEEDFE; color: #3C3489; }
+  .cat-fusiones { background: #FAEEDA; color: #854F0B; }
+  .cat-deportes { background: #E1F5EE; color: #0F6E56; }
+  .cat-default { background: #F1EFE8; color: #5F5E5A; }
+  .region { font-size: 11px; color: var(--text3); }
+  .card-title { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--text); line-height: 1.4; margin-bottom: 0.75rem; }
+  .card-summary { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 1rem; }
+  .points-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .point { display: flex; gap: 8px; font-size: 13px; color: var(--text2); margin-bottom: 5px; line-height: 1.5; }
+  .point-bullet { color: var(--gold); flex-shrink: 0; margin-top: 1px; }
+  .card-actions { display: flex; align-items: center; justify-content: space-between; padding-top: 1rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+  .source-link { font-size: 12px; color: var(--text3); text-decoration: none; display: flex; align-items: center; gap: 4px; transition: color 0.2s; }
+  .source-link:hover { color: var(--text2); }
+  .actions-right { display: flex; gap: 8px; }
+  .copy-btn { display: flex; align-items: center; gap: 5px; padding: 7px 14px; background: #0077b5; color: white; border: none; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: opacity 0.2s; }
+  .copy-btn:hover { opacity: 0.85; }
+  .copy-btn.copied { background: #22c55e; }
+  .post-preview { background: #f8f7f4; border-radius: 8px; padding: 1rem; margin-top: 1rem; font-size: 12px; color: var(--text2); line-height: 1.7; white-space: pre-wrap; border: 1px solid var(--border); display: none; }
+  .toggle-post-btn { display: flex; align-items: center; gap: 5px; padding: 7px 14px; background: transparent; color: var(--text2); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .toggle-post-btn:hover { background: var(--bg); }
+  .empty-state { text-align: center; padding: 5rem 2rem; }
+  .empty-icon { font-size: 48px; color: var(--text3); margin-bottom: 1.5rem; }
+  .empty-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--text); margin-bottom: 0.75rem; }
+  .empty-desc { font-size: 14px; color: var(--text2); max-width: 360px; margin: 0 auto 2rem; line-height: 1.7; }
+  .load-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--dark); color: var(--gold); border: none; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .load-btn:hover { opacity: 0.9; }
+  .loading-state { text-align: center; padding: 5rem 2rem; display: none; }
+  .spinner { width: 36px; height: 36px; border: 2px solid rgba(212,175,55,0.2); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1.5rem; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-txt { font-size: 14px; color: var(--text2); }
+  .error-box { background: #FFF5F5; border: 1px solid #FEB2B2; border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1.5rem; font-size: 13px; color: #C53030; }
+  @media (max-width: 600px) {
+    .stats-row { grid-template-columns: repeat(3, 1fr); }
+    .stat-value { font-size: 22px; }
+    .topbar { padding: 1rem; }
+    .container { padding: 1.25rem 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon">📊</div>
+    <div>
+      <div class="logo-name">Gambling Intelligence</div>
+      <div class="logo-sub">Panel ejecutivo global</div>
+    </div>
+  </div>
+  <div class="n8n-badge"><div class="dot-green"></div> n8n activo</div>
+</div>
+
+<div class="container">
+
+  <div id="empty-state" class="empty-state">
+    <div class="empty-icon">📰</div>
+    <div class="empty-title">Panel listo, Miguel Angel</div>
+    <div class="empty-desc">Carga las últimas noticias procesadas por tu workflow de n8n. Cada análisis incluye resumen ejecutivo, puntos clave y post listo para LinkedIn.</div>
+    <button class="load-btn" onclick="loadNoticias()">⚡ Cargar últimas noticias</button>
+  </div>
+
+  <div id="loading-state" class="loading-state">
+    <div class="spinner"></div>
+    <div class="loading-txt" id="load-msg">Conectando con n8n...</div>
+  </div>
+
+  <div id="main-content" style="display:none;">
+    <div class="date-row">
+      <div class="date-txt" id="exec-info"></div>
+      <button class="refresh-btn" onclick="loadNoticias()">↻ Actualizar</button>
+    </div>
+    <div id="error-box" style="display:none;" class="error-box"></div>
+    <div class="stats-row" id="stats-row"></div>
+    <div class="news-list" id="news-list"></div>
+  </div>
+
+</div>
+
+<script>
+const N8N_URL = 'https://n8n-production-ba1f1.up.railway.app';
+const N8N_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YmQ1NzBhMi1mYzRiLTRkMzctOTQyZS0zZDE1MGQ4MTI5OTkiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwianRpIjoiMzM2OTNhN2YtYWEwNi00OTBmLWFlNTgtM2M1MjNhZjA0ZjQ3IiwiaWF0IjoxNzgwMDAzMTQzfQ.MUUeHocG_SrH0G5f-8bD6Iy66XQ31r4OmKrTNzSq1Ks';
+const WORKFLOW_ID = 'veTOf65qKze8Z4JQ';
+
+const catMap = {
+  'regulacion': 'cat-regulacion', 'regulación': 'cat-regulacion',
+  'mercado': 'cat-mercado', 'tecnologia': 'cat-tecnologia', 'tecnología': 'cat-tecnologia',
+  'fusiones': 'cat-fusiones', 'deportes': 'cat-deportes'
+};
+const catLabel = {
+  'regulacion': 'Regulación', 'regulación': 'Regulación',
+  'mercado': 'Mercado', 'tecnologia': 'Tecnología', 'tecnología': 'Tecnología',
+  'fusiones': 'M&A', 'deportes': 'Deportes'
+};
+
+const loadMsgs = ['Conectando con n8n...', 'Obteniendo última ejecución...', 'Procesando noticias del análisis...'];
+let msgTimer;
+
+function showLoading() {
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('main-content').style.display = 'none';
+  document.getElementById('loading-state').style.display = 'block';
+  let i = 0;
+  msgTimer = setInterval(() => {
+    i = (i + 1) % loadMsgs.length;
+    document.getElementById('load-msg').textContent = loadMsgs[i];
+  }, 2000);
+}
+
+async function loadNoticias() {
+  showLoading();
+  try {
+    const r1 = await fetch(`${N8N_URL}/api/v1/executions?workflowId=${WORKFLOW_ID}&status=success&limit=1`, {
+      headers: { 'X-N8N-API-KEY': N8N_KEY, 'Accept': 'application/json' }
+    });
+    if (!r1.ok) throw new Error(`Error ${r1.status}`);
+    const d1 = await r1.json();
+    clearInterval(msgTimer);
+
+    if (!d1.data || d1.data.length === 0) {
+      showError('No hay ejecuciones exitosas aún. Ve a n8n y ejecuta el workflow manualmente primero.');
+      return;
+    }
+
+    const exec = d1.data[0];
+    const execDate = new Date(exec.startedAt).toLocaleDateString('es-PE', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+
+    const r2 = await fetch(`${N8N_URL}/api/v1/executions/${exec.id}`, {
+      headers: { 'X-N8N-API-KEY': N8N_KEY, 'Accept': 'application/json' }
+    });
+    const d2 = await r2.json();
+
+    const codeNode = d2.data?.resultData?.runData?.['Code in JavaScript'];
+    if (!codeNode?.[0]?.data?.main?.[0]) {
+      showError('No se encontraron noticias en la última ejecución exitosa.');
+      return;
+    }
+
+    const noticias = codeNode[0].data.main[0].map(i => i.json);
+    renderNoticias(noticias, execDate);
+
+  } catch(e) {
+    clearInterval(msgTimer);
+    showError('No se pudo conectar con n8n. Asegúrate de que el workflow esté publicado y la API key sea válida. Error: ' + e.message);
+  }
+}
+
+function showError(msg) {
+  document.getElementById('loading-state').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+  const eb = document.getElementById('error-box');
+  eb.style.display = 'block';
+  eb.textContent = msg;
+  document.getElementById('stats-row').innerHTML = '';
+  document.getElementById('news-list').innerHTML = '';
+}
+
+function renderNoticias(noticias, execDate) {
+  document.getElementById('loading-state').style.display = 'none';
+  document.getElementById('error-box').style.display = 'none';
+  document.getElementById('exec-info').textContent = 'Última ejecución: ' + execDate;
+
+  const cats = new Set(noticias.map(n => n.categoria)).size;
+  const regs = new Set(noticias.map(n => n.region)).size;
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat"><div class="stat-label">Noticias</div><div class="stat-value">${noticias.length}</div></div>
+    <div class="stat"><div class="stat-label">Categorías</div><div class="stat-value">${cats}</div></div>
+    <div class="stat"><div class="stat-label">Regiones</div><div class="stat-value">${regs}</div></div>
+  `;
+
+  document.getElementById('news-list').innerHTML = noticias.map((n, i) => {
+    const catKey = (n.categoria || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const catClass = catMap[catKey] || 'cat-default';
+    const catName = catLabel[(n.categoria || '').toLowerCase()] || n.categoria || 'General';
+    const postEnc = encodeURIComponent(n.post_linkedin || '');
+    const tituloCorto = (n.titulo || '').length > 55 ? (n.titulo || '').substring(0, 55) + '…' : (n.titulo || '');
+    return `
+    <div class="card">
+      <div class="card-img">
+        <div class="card-img-inner">
+          <div class="card-img-icon">📊</div>
+          <div class="card-img-title">${tituloCorto}</div>
+          <div class="card-img-brand">Gambling Intelligence · Análisis Ejecutivo</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="cat-tag ${catClass}">${catName}</span>
+          <span class="region">🌎 ${n.region || ''}</span>
+        </div>
+        <div class="card-title">${n.titulo || ''}</div>
+        <div class="card-summary">${n.resumen || ''}</div>
+        <div class="points-label">Puntos clave</div>
+        ${(n.puntos_clave || []).map(p => `<div class="point"><span class="point-bullet">▸</span><span>${p}</span></div>`).join('')}
+        <div class="card-actions">
+          <a href="${n.fuente_url || '#'}" class="source-link" target="_blank" rel="noopener">↗ ${n.fuente_nombre || 'Ver fuente'}</a>
+          <div class="actions-right">
+            <button class="toggle-post-btn" onclick="togglePost(${i})">Ver post</button>
+            <button class="copy-btn" id="copy-btn-${i}" onclick="copyPost(${i}, '${postEnc}')">in Copiar post</button>
+          </div>
+        </div>
+        <div class="post-preview" id="post-${i}">${(n.post_linkedin || '').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('main-content').style.display = 'block';
+}
+
+function togglePost(i) {
+  const el = document.getElementById('post-' + i);
+  el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
+function copyPost(i, enc) {
+  const text = decodeURIComponent(enc);
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn-' + i);
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'in Copiar post';
+      btn.classList.remove('copied');
+    }, 2500);
+  });
+}
+</script>
+</body>
+</html>
